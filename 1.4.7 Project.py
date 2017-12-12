@@ -25,14 +25,17 @@ fig.show()
 
 
 def blackWhiteFilter():
-    height = len(img)
-    width = len(img[0])
+    width, height = img.size
+    pixels = img.load()
     for i in range(height):
         for j in range(width):
-            val = sum(img[i][j])
-            img[i][j][0] = val
-            img[i][j][1] = val
-            img[i][j][2] = val
+            r, g, b = img.getpixel((j, i))
+            val = (r + g + b)/3
+            if img.mode == 'RGB':
+                shade = (val, val, val)
+            elif img.mode == 'RGBA':
+                shade = (val, val, val, 255)
+            pixels[j,i]= shade
     ax.imshow(img, interpolation='none')
     # Show the figure on the screen
     fig.show()
