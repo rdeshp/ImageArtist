@@ -7,7 +7,7 @@ import PIL
 # Get the directory of this python script
 directory = os.path.dirname(os.path.abspath(__file__)) 
 # Build an absolute filename from directory + filename
-filename = os.path.join(directory, '1.4.5 Images\\car.jpg')
+filename = os.path.join(directory, '1.4.5 Images\\flower2.jpg')
 # Read the image data into an array
 img = PIL.Image.open(filename)
   
@@ -23,6 +23,19 @@ ax.imshow(img, interpolation='none')
 # Show the figure on the screen
 fig.show()
 
+def loadImg(imgName):
+    directory = os.path.dirname(os.path.abspath(__file__)) 
+    # Build an absolute filename from directory + filename
+    filename = os.path.join(directory, '1.4.5 Images\\'+imgName+'.jpg')
+    # Read the image data into an array
+    img = PIL.Image.open(filename)
+        
+    
+    # Show the image data in a subplot
+    ax.imshow(img, interpolation='none')
+    
+    # Show the figure on the screen
+    fig.show()
 
 def blackWhiteFilter():
     width, height = img.size
@@ -40,7 +53,44 @@ def blackWhiteFilter():
     # Show the figure on the screen
     fig.show()
     
+def blackWhiteGeo():
+    width, height = img.size
+    pixels = img.load()
+    for i in range(height):
+        for j in range(width):
+            r, g, b = img.getpixel((j, i))
+            val = int((r*g*b)**(1/3.0))
+            if img.mode == 'RGB':
+                shade = (val, val, val)
+            elif img.mode == 'RGBA':
+                shade = (val, val, val, 255)
+            pixels[j,i]= shade
+    ax.imshow(img, interpolation='none')
+    # Show the figure on the screen
+    fig.show()
     
+
+def keyFilter(red, green, blue, thresh):
+    width, height = img.size
+    pixels = img.load()
+    for i in range(height):
+        for j in range(width):
+            r, g, b = img.getpixel((j, i))
+            difference = (red-r)**2 + (green-g)**2+ (blue-b)**2
+            
+            if difference > thresh and img.mode == 'RGB':
+                val = int((r*g*b)**(1/3.0))
+                if img.mode == 'RGB':
+                    shade = (val, val, val)
+                elif img.mode == 'RGBA':
+                    shade = (val, val, val, 255)
+                pixels[j,i]= shade
+    ax.imshow(img, interpolation='none')
+    # Show the figure on the screen
+    fig.show()
+
+
+
 def frame(thickness = 10):
     height = len(img)
     width = len(img[0])    
