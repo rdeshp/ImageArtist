@@ -27,7 +27,7 @@ fig.show()
 def loadImg(imgName):
     directory = os.path.dirname(os.path.abspath(__file__)) 
     # Build an absolute filename from directory + filename
-    filename = os.path.join(directory, '1.4.5 Images\\'+imgName+'.jpg')
+    filename = os.path.join(directory, 'Output Images\\'+imgName+'.png')
     # Read the image data into an array
     img = PIL.Image.open(filename)
         
@@ -118,20 +118,29 @@ def addColor(red, green, blue):
 
 
 
-def frame(thickness = 20, color = (0,0,0)):
-    width, height = img.size  
+def frame(obj, thickness = 20, color = (0,0,0)):
+    width, height = obj.size
+    print(width)
+    print(height)
     image_sheet = PIL.Image.new("RGB", (width+2*thickness, height+2*thickness), color)
     newPixels = image_sheet.load()
     for i in range(height):
         for j in range(width):
-            r, g, b = img.getpixel((j, i))
+            r, g, b = obj.getpixel((j, i))
             shade = (r, g, b)
             newPixels[j+thickness,i+thickness]= shade
     ax.imshow(image_sheet, interpolation='none')
     # Show the figure on the screen
     fig.show()
     
-    
+    '''
+    directory = os.path.dirname(os.path.abspath(__file__)) 
+    # Build an absolute filename from directory + filename
+    filename = os.path.join(directory, 'Output Images\\frameImg.png')
+    image_sheet.save(filename, "PNG")
+    loadImg('frameImg')
+    '''
+    return image_sheet
     
 def reloadImage():
     directory = os.path.dirname(os.path.abspath(__file__)) 
@@ -153,3 +162,43 @@ def saveImg(imgName):
     filename = os.path.join(directory, 'Output Images\\'+imgName+'.png')
     img.save(filename, "PNG")
     
+    
+def drawCircle(obj, x_pos,y_pos, r ,color = (100,100,100)):
+    pixels = obj.load()
+    for y in range(-1*r,r):
+        for x in range(int(-1*np.sqrt(r**2-y**2)),int(np.sqrt(r**2-y**2)+1)):
+            if img.mode == 'RGB':
+	       shade = (color[0],color[1],color[2])
+            elif img.mode == 'RGBA':
+                shade = (color[0],color[1],color[2], 255)
+            pixels[x_pos+x,y_pos+y]= shade
+    ax.imshow(obj, interpolation='none')
+    # Show the figure on the screen
+    fig.show()
+    return obj
+
+def drawTriangle(obj,x_pos,y_pos,side, color = (100,100,100)):
+    pixels = obj.load()
+    for y in range(0,int(side*np.sqrt(3))):
+        base = y/np.sqrt(3)
+	for x in range(int(-1*base), int(base)):
+	    if obj.mode == 'RGB':
+	       shade = (color[0],color[1],color[2])
+            elif obj.mode == 'RGBA':
+                shade = (color[0],color[1],color[2], 255)
+            pixels[x_pos+x,y_pos+y]= shade
+    ax.imshow(obj, interpolation='none')
+    # Show the figure on the screen
+    fig.show()
+    return obj
+
+def drawRectangle(obj, x_pos, y_pos, length, width, color = (100,100,100)):
+    pixels = obj.load()
+    for y in range(length+1):
+	for x in range(width+1):
+	   img.setPixelColor(x_pos+x,y_pos+y,color)
+    ax.imshow(obj, interpolation='none')
+    # Show the figure on the screen
+    fig.show()	   
+    return obj
+
